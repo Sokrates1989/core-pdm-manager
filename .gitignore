@@ -1,0 +1,9 @@
+# Local configuration overrides
+config/config.env
+
+# Runtime state and reports in host projects
+.pdm-manager/
+
+# Python artifacts
+__pycache__/
+*.pyc
