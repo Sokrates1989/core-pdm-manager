@@ -15,10 +15,15 @@ services:
     working_dir: /workspace
     tty: true
     stdin_open: true
+    # Default command only applies to the bare interactive shell (`run --rm dev`).
+    # Explicit commands like `run --rm dev pdm install` or the dev-setup.sh
+    # invocation override this and are unaffected. `stty icrnl -igncr`
+    # normalizes carriage returns from Windows PowerShell before bash reads
+    # commands, preventing arguments like `init\r` from reaching PDM.
+    command: ["/bin/bash", "-c", "stty icrnl -igncr 2>/dev/null || true; exec /bin/bash -i"]
     environment:
       - USE_UV_BACKEND=${USE_UV_BACKEND:-true}
       - PDM_INSTALL_CACHE=${PDM_INSTALL_CACHE:-true}
       - PDM_PARALLEL_INSTALL=${PDM_PARALLEL_INSTALL:-true}
       - PIPX_HOME=/home/devuser/.local/pipx
       - PIPX_BIN_DIR=/home/devuser/.local/bin
-      - PATH=/home/devuser/.local/bin:$PATH
